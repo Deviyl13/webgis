@@ -195,6 +195,40 @@
       map.addLayer(sungai); //sungai ditampilkan ketika halaman dipanggil
     });
 
+    // Pendidikan Magelang Tengah
+    /* GeoJSON Point */
+    var pendidikan = L.geoJson(null, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: "http://si-asna.sragenkab.go.id//uploads/data_klasifikasi/20191119144342-marker.png", //icon simbol
+            iconSize: [28, 28], //ukuran icon simbol
+            iconAnchor: [14, 28], //penempatan icon simbol
+            popupAnchor: [0, -28], //penempatan popup terhadap icon simbol
+          })
+        });
+      },
+      /* Popup */
+      onEachFeature: function (feature, layer) {
+        if (feature.properties) {
+          /* Variabel untuk memanggil atribut dari data geojson */
+          var content = "Nama : <b>" + feature.properties.Nama + "</b><br>" +
+          "Alamat : <b>" + feature.properties.Alamat + "</b><br>" +
+          "Rating : <b>" + feature.properties.Rating + "<b/>"
+          layer.on({
+            click: function (e) { //Fungsi ketika icon simbol di-klik
+              pendidikan.bindPopup(content);
+            }
+          });
+        }
+      }
+    });
+    /* memanggil data geojson point */
+    $.getJSON("pendidikan.geojson", function (data) {
+      pendidikan.addData(data);
+      map.addLayer(pendidikan); //pendidikan ditampilkan ketika halaman dipanggil
+    });
+
     // akhir layar peta
 
     var baseMaps = { //list basemap
@@ -206,6 +240,7 @@
       'jalan utama': sungai,
       'admin desa': admindesa,
       'sungai': sungai
+      
 
     };
     var layerControl = L.control.layers(baseMaps, Layers, { collapsed: false });
